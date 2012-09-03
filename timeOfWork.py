@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import datetime
 import time
 import signal
@@ -5,7 +7,7 @@ import sys
 import sqlite3
 
 conn = sqlite3.connect('work.db')
-company = "victor"
+company = "unknown"
 
 def initDB():
 	c = conn.cursor()
