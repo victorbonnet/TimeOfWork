@@ -7,11 +7,11 @@ import sys
 import sqlite3
 
 conn = sqlite3.connect('work.db')
-company = "unknown"
+project = "unknown"
 
 def initDB():
 	c = conn.cursor()
-	c.execute("create table if not exists  Session(company TEXT, start INT, end INT, time FLOAT)")
+	c.execute("create table if not exists  Session(project TEXT, start INT, end INT, time FLOAT)")
 	conn.commit()
 	c.close()
 
@@ -25,14 +25,14 @@ def stopWork():
         timeOfWork = endDate - startDate
         print "Time of Work: %s" % str(timeOfWork)
 	cur = conn.cursor()    
-	cur.execute("insert into Session VALUES (?, ?, ?, ?)",(company, time.mktime(startDate.timetuple()), time.mktime(endDate.timetuple()), timeOfWork.total_seconds()))
+	cur.execute("insert into Session VALUES (?, ?, ?, ?)",(project, time.mktime(startDate.timetuple()), time.mktime(endDate.timetuple()), timeOfWork.total_seconds()))
 	conn.commit()
         cur.close()
 
 def displayStats():
 	cur = conn.cursor()
 	list = []
-	for row in cur.execute('SELECT start, end, time FROM Session WHERE company = ? ORDER BY start', [company]):
+	for row in cur.execute('SELECT start, end, time FROM Session WHERE project = ? ORDER BY start', [project]):
         	list.append(row[2])
 		print "start: ", datetime.datetime.fromtimestamp(int(row[0])).strftime('%Y-%m-%d %H:%M:%S'), ", end: ", datetime.datetime.fromtimestamp(int(row[1])).strftime('%Y-%m-%d %H:%M:%S'), ", time: ", str(row[2])
 	cur.close()
@@ -51,17 +51,17 @@ if __name__=="__main__":
                 sys.exit(0)
 	elif (sys.argv[1] == "start"):
 		if len(sys.argv) < 3:
-			print "The company name is require"
+			print "The project name is require"
 			sys.exit(0)
 		else:
-			company = sys.argv[2]
+			project = sys.argv[2]
 			startWork()
 	elif (sys.argv[1] == "stats"):
 		if len(sys.argv) < 3:
-                        print "The company name is require"
+                        print "The project name is require"
                         sys.exit(0)
                 else:
-                        company = sys.argv[2]
+                        project = sys.argv[2]
 			displayStats()
 			sys.exit(0)
 	else:
